@@ -12,7 +12,7 @@ class DataBaseHelper (context: Context): SQLiteOpenHelper(
     DATABASE_VERSION){
     //BASE DE DATOS
     companion object{
-        private const val DATABASE_NAME = "music.db"
+        private const val DATABASE_NAME = "recetas.db"
         private const val  DATABASE_VERSION = 1
 
         //Tablas en la BD
