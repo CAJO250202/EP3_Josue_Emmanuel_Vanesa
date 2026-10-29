@@ -1,5 +1,6 @@
 package com.example.ep2
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -121,6 +122,18 @@ class HomeActivity : AppCompatActivity() {
             Glide.with(this@HomeActivity)
                 .load(receta.image)
                 .into(imgPortada)
+
+            // EVENTO CLICK PARA ABRIR LA PANTALLA DE DETALLES
+            vistaReceta.setOnClickListener {
+                val intent = Intent(this@HomeActivity, DetailsActivity::class.java).apply {
+                    putExtra("ID_RECETA", receta.id)
+                    putExtra("NOMBRE_RECETA", receta.title ?: "Receta sin nombre")
+                    putExtra("TIEMPO_RECETA", receta.readyInMinutes ?: 0)
+                    putExtra("PORCIONES_RECETA", receta.servings ?: 0)
+                    putExtra("IMAGEN_RECETA", receta.image)
+                }
+                startActivity(intent)
+            }
 
             contenedor.addView(vistaReceta)
         }
