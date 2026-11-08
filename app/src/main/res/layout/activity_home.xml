@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- TEXTO PARA SABER EL ESTADO DE CARGA DEL API -->
             <TextView
                 android:id="@+id/tvResultado"
                 android:layout_width="wrap_content"
@@ -30,7 +29,7 @@
                 android:text="Cargando recetas del API..."
                 android:textSize="15sp"/>
 
-            <!-- TÍTULO DE LA SECCIÓN 1 / CONSULTA 1: PASTA -->
+            <!-- CONSULTA 1: PASTA -->
             <TextView
                 android:id="@+id/tvSeccionPasta"
                 android:layout_width="match_parent"
@@ -42,7 +41,6 @@
                 android:textSize="22sp"
                 android:textStyle="bold"/>
 
-            <!-- SCROLLVIEW HORIZONTAL SECCIÓN 1 -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +51,6 @@
                 android:paddingEnd="15dp"
                 android:scrollbars="none">
 
-                <!-- CONTENEDOR SECCIÓN 1 -->
                 <LinearLayout
                     android:id="@+id/contenedorPasta"
                     android:layout_width="wrap_content"
@@ -61,7 +58,7 @@
                     android:orientation="horizontal"/>
             </HorizontalScrollView>
 
-            <!-- TÍTULO DE LA SECCIÓN 2 / CONSULTA 2: TACOS -->
+            <!-- CONSULTA 2: TACOS -->
             <TextView
                 android:id="@+id/tvSeccionTacos"
                 android:layout_width="match_parent"
@@ -73,7 +70,6 @@
                 android:textSize="22sp"
                 android:textStyle="bold"/>
 
-            <!-- SCROLLVIEW HORIZONTAL SECCIÓN 2 -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +80,6 @@
                 android:paddingEnd="15dp"
                 android:scrollbars="none">
 
-                <!-- CONTENEDOR SECCIÓN 2 -->
                 <LinearLayout
                     android:id="@+id/contenedorTacos"
                     android:layout_width="wrap_content"
@@ -92,7 +87,7 @@
                     android:orientation="horizontal"/>
             </HorizontalScrollView>
 
-            <!-- TÍTULO DE LA SECCIÓN 3 / CONSULTA 3: RECETAS ALEATORIAS -->
+            <!-- CONSULTA 3: RECETAS ALEATORIAS -->
             <TextView
                 android:id="@+id/tvSeccionAleatorias"
                 android:layout_width="match_parent"
@@ -104,7 +99,6 @@
                 android:textSize="22sp"
                 android:textStyle="bold"/>
 
-            <!-- SCROLLVIEW HORIZONTAL SECCIÓN 3 -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,7 +109,6 @@
                 android:paddingEnd="15dp"
                 android:scrollbars="none">
 
-                <!-- CONTENEDOR SECCIÓN 3 -->
                 <LinearLayout
                     android:id="@+id/contenedorAleatorias"
                     android:layout_width="wrap_content"

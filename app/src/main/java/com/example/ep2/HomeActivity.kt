@@ -36,7 +36,7 @@ class HomeActivity : AppCompatActivity() {
         contenedorTacos = findViewById(R.id.contenedorTacos)
         contenedorAleatorias = findViewById(R.id.contenedorAleatorias)
 
-        // LLAMADO DE LAS 3 CONSULTAS A LA API
+        //3 CONSULTAS A LA API
         obtenerRecetasPorBusqueda("pasta", contenedorPasta)
         obtenerRecetasPorBusqueda("tacos", contenedorTacos)
         obtenerRecetasAleatorias(contenedorAleatorias)
@@ -123,7 +123,6 @@ class HomeActivity : AppCompatActivity() {
                 .load(receta.image)
                 .into(imgPortada)
 
-            // EVENTO CLICK PARA ABRIR LA PANTALLA DE DETALLES
             vistaReceta.setOnClickListener {
                 val intent = Intent(this@HomeActivity, DetailsActivity::class.java).apply {
                     putExtra("ID_RECETA", receta.id)
