@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "215079434479",
+    "project_id": "turefri-f5df6",
+    "storage_bucket": "turefri-f5df6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215079434479:android:5f2fe932594f0c4577c31a",
+        "android_client_info": {
+          "package_name": "com.example.ep2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215079434479-paedhmp0tt0t8sdiegtgk90tb15304fd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ep2",
+            "certificate_hash": "f42d833dc93ee8d8c16dd711b4564a6e5ca3c95d"
+          }
+        },
+        {
+          "client_id": "215079434479-8638ogdg8iem6u7gc87crjsrm7k44hrv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaqzmyrG2J-mbUOgBSDCVE2-sI5v2vU0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215079434479-8638ogdg8iem6u7gc87crjsrm7k44hrv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
