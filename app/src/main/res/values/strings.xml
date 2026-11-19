@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">EP2</string>
+    <string name="open_drawer">Abrir menú de navegación</string>
+    <string name="close_drawer">Cerrar menú de navegación</string>
+    <string name="inicio">Inicio</string>
+    <string name="favoritos">Favoritos</string>
+    <string name="salir">Salir</string>
+    <string name="cuenta">Cuenta</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="mantener_sesion">Mantener sesión activa</string>
 </resources>

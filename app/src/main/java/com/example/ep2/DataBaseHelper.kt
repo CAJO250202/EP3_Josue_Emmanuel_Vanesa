@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.ep2.model.FavoriteRecipe
 
 // CREAR CLASE DATABASEHELPER QUE HEREDA DE LA CLASE SQLITEOPENHELPER
 class DataBaseHelper(context: Context) : SQLiteOpenHelper(
@@ -186,5 +187,30 @@ class DataBaseHelper(context: Context) : SQLiteOpenHelper(
 
     fun existeRecetaFavorita(recetaId: Int): Boolean {
         return esFavorito(recetaId)
+    }
+
+    // METODO PARA CONSULTAR LAS RECETAS FAVORITAS GUARDADAS EN LA BASE DE DATOS
+    fun obtenerRecetasFavoritas(): List<FavoriteRecipe> {
+        val lista = mutableListOf<FavoriteRecipe>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_FAVORITOS", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COL_FAV_ID))
+                val recetaId = cursor.getInt(cursor.getColumnIndexOrThrow(COL_RECETA_ID))
+                val titulo = cursor.getString(cursor.getColumnIndexOrThrow(COL_TITULO))
+                val tiempo = cursor.getInt(cursor.getColumnIndexOrThrow(COL_TIEMPO))
+                val porciones = cursor.getInt(cursor.getColumnIndexOrThrow(COL_PORCIONES))
+                val imagen = cursor.getString(cursor.getColumnIndexOrThrow(COL_IMAGEN))
+
+                val favorito = FavoriteRecipe(id, recetaId, titulo, tiempo, porciones, imagen)
+                lista.add(favorito)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        return lista
     }
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101818"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".FavoritesActivity">
+
+    <!-- TOOLBAR -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarFavoritos"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#181818"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:title="Recetas Favoritas"
+        app:titleTextColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tvSinFavoritos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="No tienes recetas guardadas en la base de datos"
+        android:textColor="#CCCCCC"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#181818"
+        android:padding="10dp">
+
+        <GridLayout
+            android:id="@+id/gridLayoutFavoritos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alignmentMode="alignMargins"
+            android:columnCount="2"
+            android:columnOrderPreserved="false" />
+
+    </ScrollView>
+
+</LinearLayout>

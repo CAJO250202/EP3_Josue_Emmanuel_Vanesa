@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/opc_inicio"
+        android:title="@string/inicio"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/opc_favoritos"
+        android:title="@string/favoritos"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/opc_salir"
+        android:title="@string/salir"
+        app:showAsAction="never" />
+
+</menu>

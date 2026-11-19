@@ -2,6 +2,8 @@ package com.example.ep2
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -9,10 +11,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.ep2.model.Recipe
 import com.example.ep2.model.RecipeResponse
 import com.example.ep2.network.RetrofitClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,20 +34,81 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var contenedorTacos: LinearLayout
     private lateinit var contenedorAleatorias: LinearLayout
 
+    private lateinit var toolbar: Toolbar
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        auth = FirebaseAuth.getInstance()
+
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         tvResultado = findViewById(R.id.tvResultado)
         contenedorPasta = findViewById(R.id.contenedorPasta)
         contenedorTacos = findViewById(R.id.contenedorTacos)
         contenedorAleatorias = findViewById(R.id.contenedorAleatorias)
 
-        //3 CONSULTAS A LA API
+        // 3 CONSULTAS A LA API
         obtenerRecetasPorBusqueda("pasta", contenedorPasta)
         obtenerRecetasPorBusqueda("tacos", contenedorTacos)
         obtenerRecetasAleatorias(contenedorAleatorias)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_boton, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.opc_inicio -> {
+                Toast.makeText(this, "Inicio", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.opc_favoritos -> {
+                val intent = Intent(this, FavoritesActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.opc_salir -> {
+                cerrarSesionGoogle()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    // MÉTODO PARA CERRAR SESIÓN DE GOOGLE Y FIREBASE
+    private fun cerrarSesionGoogle() {
+        // 1. CERRAR SESIÓN EN FIREBASE
+        auth.signOut()
+
+        // 2. CERRAR SESIÓN EN GOOGLE SIGN IN CLIENT
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+        googleSignInClient.signOut()
+
+        Toast.makeText(this, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show()
+
+        // 3. REDIRIGIR A LA PANTALLA DE INICIO DE SESIÓN (MAINACTIVITY)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
     }
 
     // METODO PARA OBTENER INFORMACION DE LAS RECETAS POR BUSQUEDA

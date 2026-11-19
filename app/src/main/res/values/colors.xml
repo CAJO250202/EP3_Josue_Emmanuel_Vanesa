@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="bg_main">#FAF5F0</color>
+    <color name="bg_home">#101818</color>
+    <color name="bg_toolbar">#181818</color>
+    <color name="menu_popup_bg">#243030</color>
+    <color name="menu_popup_text">#FFFFFF</color>
 </resources>
