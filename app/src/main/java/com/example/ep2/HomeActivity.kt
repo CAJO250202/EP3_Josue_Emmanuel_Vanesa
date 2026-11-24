@@ -1,6 +1,12 @@
 package com.example.ep2
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +18,10 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
@@ -28,6 +38,7 @@ import retrofit2.Response
 class HomeActivity : AppCompatActivity() {
 
     private val apiKey = "d4db6cce1be14b728fcb6e66867e6d9b"
+    private val CHANNEL_ID = "ep2_notificaciones"
 
     private lateinit var tvResultado: TextView
     private lateinit var contenedorPasta: LinearLayout
@@ -62,6 +73,10 @@ class HomeActivity : AppCompatActivity() {
         obtenerRecetasPorBusqueda("pasta", contenedorPasta)
         obtenerRecetasPorBusqueda("tacos", contenedorTacos)
         obtenerRecetasAleatorias(contenedorAleatorias)
+
+        // CONFIGURAR Y MOSTRAR NOTIFICACIÓN (TIPO 1: Texto Grande y Personalizada)
+        crearCanalNotificaciones()
+        verificarPermisosNotificacion()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -204,6 +219,61 @@ class HomeActivity : AppCompatActivity() {
             }
 
             contenedor.addView(vistaReceta)
+        }
+    }
+
+    // MÉTODOS PARA NOTIFICACIONES
+    private fun crearCanalNotificaciones() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Notificaciones Home"
+            val descriptionText = "Canal para notificaciones de bienvenida y estado"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun verificarPermisosNotificacion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)
+            } else {
+                mostrarNotificacionBienvenida()
+            }
+        } else {
+            mostrarNotificacionBienvenida()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mostrarNotificacionBienvenida()
+        }
+    }
+
+    private fun mostrarNotificacionBienvenida() {
+        // Personalización de la notificación con los datos del usuario logueado
+        val userName = auth.currentUser?.displayName ?: "Chef"
+        
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher) 
+            .setContentTitle("¡Bienvenido a EP2, $userName!")
+            .setContentText("Descubre las mejores recetas hoy.")
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("Hola $userName, descubre las mejores recetas hoy. Explora nuestra sección de pastas, tacos y opciones aleatorias para inspirar tu cocina."))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            try {
+                notify(1, builder.build())
+            } catch (e: SecurityException) {
+                e.printStackTrace()
+            }
         }
     }
 }

@@ -1,5 +1,11 @@
 package com.example.ep2
 
+import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -7,6 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 
 class DetailsActivity : AppCompatActivity() {
@@ -19,8 +29,8 @@ class DetailsActivity : AppCompatActivity() {
     private lateinit var tvResumenDetalle: TextView
 
     private lateinit var db: DataBaseHelper
-
     private var recetaFavorita = false
+    private val CHANNEL_ID_FAV = "ep2_favoritos"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +45,7 @@ class DetailsActivity : AppCompatActivity() {
         tvResumenDetalle = findViewById(R.id.tvResumenDetalle)
         db = DataBaseHelper(this)
 
+        crearCanalNotificacionesFavoritos()
         mostrarInformacionReceta()
     }
 
@@ -90,9 +101,66 @@ class DetailsActivity : AppCompatActivity() {
                     recetaFavorita = !recetaFavorita
                     btnFavorito.setImageResource(R.drawable.favorito)
                     Toast.makeText(this, "Receta $nombreReceta agregada a favoritos", Toast.LENGTH_SHORT).show()
+                    verificarPermisosYNotificar(nombreReceta)
                 } else {
                     Toast.makeText(this, "Receta $nombreReceta ya se encuentra agregada a favoritos", Toast.LENGTH_SHORT).show()
                 }
+            }
+        }
+    }
+
+    // MÉTODOS PARA NOTIFICACIÓN DE FAVORITOS
+    private fun crearCanalNotificacionesFavoritos() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Favoritos"
+            val descriptionText = "Notificaciones al agregar recetas a favoritos"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(CHANNEL_ID_FAV, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun verificarPermisosYNotificar(nombreReceta: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 102)
+            } else {
+                mostrarNotificacionFavorito(nombreReceta)
+            }
+        } else {
+            mostrarNotificacionFavorito(nombreReceta)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Como la receta ya fue agregada, si el usuario da permiso justo ahora, le mostramos la notificación
+        if (requestCode == 102 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            val nombreReceta = intent.getStringExtra("NOMBRE_RECETA") ?: "Tu receta"
+            mostrarNotificacionFavorito(nombreReceta)
+        }
+    }
+
+    private fun mostrarNotificacionFavorito(nombreReceta: String) {
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID_FAV)
+            .setSmallIcon(R.drawable.favorito) // Icono específico de favoritos
+            .setContentTitle("¡Receta guardada!")
+            .setContentText("$nombreReceta se ha añadido a tu lista.")
+            .setStyle(NotificationCompat.InboxStyle()
+                .addLine("Receta: $nombreReceta")
+                .addLine("Puedes verla en la sección de Favoritos")
+                .setBigContentTitle("¡Guardada con éxito!"))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            try {
+                notify(2, builder.build())
+            } catch (e: SecurityException) {
+                e.printStackTrace()
             }
         }
     }
